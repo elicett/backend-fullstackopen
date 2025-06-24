@@ -1,4 +1,4 @@
-/*Part 3, subpart a: Node.js and Express, Excercise 3.4: Backend in the phone book (step 4): Delete an specific value using the id*/
+/*Part 3, subpart a: Node.js and Express, Excercise 3.5: Backend in the phone book (step 5): Previously done -Sugerence: Consider refactor the order in steps 4 and 5-*/
 const express = require('express')
 const app = express()
 
