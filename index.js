@@ -1,4 +1,4 @@
-/*Part 3, subpart a: Node.js and Express, Excercise 3.1: Backend in the phone book (step 1)*/
+/*Part 3, subpart a: Node.js and Express, Excercise 3.3: Backend in the phone book (step 3): Show specific contact with handle to non-existent data*/
 const express = require('express')
 const app = express()
 
