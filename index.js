@@ -1,4 +1,4 @@
-/*Part 3, subpart a: Node.js and Express, Excercise 3.3: Backend in the phone book (step 3): Show specific contact with handle to non-existent data*/
+/*Part 3, subpart a: Node.js and Express, Excercise 3.4: Backend in the phone book (step 4): Delete an specific value using the id*/
 const express = require('express')
 const app = express()
 
@@ -48,15 +48,30 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const persons = request.body
-    console.log(persons)
-    response.json(persons)
+    const personsRequest = request.body
+    const id = Math.random() * 1000000
+
+    const newObject = {
+        id: Math.trunc(id),
+        name: personsRequest.name,
+        number: personsRequest.number
+    }
+    persons = persons.concat(newObject);
+    console.log(newObject)
+    response.json({
+        message: 'Contact added',
+        contact: newObject,
+        entireData: persons
+    })
 })
 
 app.delete('/api/persons/:id', (request, response)=> {
     const id = Number(request.params.id)
+    const contact = persons.find(value => value.id === id)
     persons = persons.filter(note => note.id !== id)
-    response.status(204).end()
+    response.status(202).json({
+        message: `Contact '${contact.name}' deleted correctly`
+        })
 })
 
 
