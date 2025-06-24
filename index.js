@@ -59,6 +59,22 @@ app.delete('/api/persons/:id', (request, response)=> {
     response.status(204).end()
 })
 
+
+app.get('/info', (request, response)=>{
+    const lengthPersons = persons.length
+    const dateNow = new Date()
+    response.status(200).send(`
+        <div>
+            <p>Phonebook has info for ${lengthPersons} persons</p>
+            <p>Request received at ${dateNow}</p>
+        </div>
+    `)
+})
+
+
+
+
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
