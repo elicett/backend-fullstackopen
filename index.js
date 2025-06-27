@@ -1,4 +1,4 @@
-/*Part 3, subpart a: Node.js and Express, Excercise 3.5: Backend in the phone book (step 5): Previously done -Sugerence: Consider refactor the order in steps 4 and 5-*/
+/*Part 3, subpart a: Node.js and Express, Excercise 3.6: Backend in the phone book (step 6): Conditionals (Missing name or number - The name already exists)-*/
 const express = require('express')
 const app = express()
 
@@ -48,14 +48,24 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const personsRequest = request.body
     const id = Math.random() * 1000000
-
     const newObject = {
         id: Math.trunc(id),
-        name: personsRequest.name,
-        number: personsRequest.number
+        name: request.body.name,
+        number: request.body.number
     }
+    if (!newObject.name || !newObject.number){
+        response.json({
+            Error: 'You should fill both (name and number) fields',
+        })
+    }
+
+    if (persons.find(value => value.name === newObject.name)){
+        response.status(409).json({
+            Error: 'Contact already exists'
+        })
+    }
+
     persons = persons.concat(newObject);
     console.log(newObject)
     response.json({
@@ -68,7 +78,16 @@ app.post('/api/persons', (request, response) => {
 app.delete('/api/persons/:id', (request, response)=> {
     const id = Number(request.params.id)
     const contact = persons.find(value => value.id === id)
+
+    if (!contact){
+        response.status(404).end('This contact doesnt exist')
+    }
+
+
     persons = persons.filter(note => note.id !== id)
+
+
+
     response.status(202).json({
         message: `Contact '${contact.name}' deleted correctly`
         })
