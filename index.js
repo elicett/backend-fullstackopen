@@ -1,4 +1,4 @@
-/*Part 3, subpart a: Node.js and Express, Excercise 3.7: Backend in the phone book (step 6): Conditionals (Missing name or number - The name already exists)-*/
+/*Part 3, subpart a: Node.js and Express, Excercise 3.8: Backend in the phone book (step 8): Morgan .token.*/
 const express = require('express')
 const morgan = require("morgan")
 const app = express()
@@ -27,9 +27,9 @@ let persons = [
 ]
 
 app.use(express.json())
-app.use(morgan('tiny'))
+//app.use(morgan('tiny'))
 
-/*
+
 morgan.token('body', (req) => {
   if (req.method === 'POST') {
     return JSON.stringify(req.body);
@@ -42,7 +42,7 @@ morgan.token('body', (req) => {
 
 
 app.use(morgan(':method :url :status :response-time ms :body', {}));
-*/
+
 
 app.get('/', (request, response) => {
     return response.send('<h1>Hello World</h1>')
