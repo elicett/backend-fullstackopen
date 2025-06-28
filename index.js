@@ -1,7 +1,27 @@
-/*Part 3, subpart a: Node.js and Express, Excercise 3.8: Backend in the phone book (step 8): Morgan .token.*/
+/*Part 3, subpart a: Node.js and Express, Excercise 3.10: Backend in the phone book (step 10): Deploying at internet*/
 const express = require('express')
 const morgan = require("morgan")
+const cors = require("cors")
 const app = express()
+
+app.use(express.json())
+//app.use(morgan('tiny'))
+app.use(cors());
+
+morgan.token('body', (req) => {
+  if (req.method === 'POST') {
+    return JSON.stringify(req.body);
+  }
+  else if (req.method === 'GET' || req.method === 'DELETE') {
+    return ''
+  }
+  else return 'Invalid Method';
+});
+
+
+app.use(morgan(':method :url :status :response-time ms :body', {}));
+
+
 
 let persons = [
     { 
@@ -25,23 +45,6 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
-
-app.use(express.json())
-//app.use(morgan('tiny'))
-
-
-morgan.token('body', (req) => {
-  if (req.method === 'POST') {
-    return JSON.stringify(req.body);
-  }
-  else if (req.method === 'GET' || req.method === 'DELETE') {
-    return ''
-  }
-  else return 'Invalid Method';
-});
-
-
-app.use(morgan(':method :url :status :response-time ms :body', {}));
 
 
 app.get('/', (request, response) => {
@@ -86,15 +89,15 @@ app.post('/api/persons', (request, response) => {
     persons = persons.concat(newObject);
     //console.log(newObject)
     return response.json({
-        message: 'Contact added',
-        contact: newObject,
-        entireData: persons
+        id: newObject.id,
+        name: newObject.name,
+        number: newObject.number,
     })
 })
 
 
-
 app.delete('/api/persons/:id', (request, response)=> {
+    console.log('Contact to DELETE:', request)
     const id = Number(request.params.id)
     const contact = persons.find(value => value.id === id)
 
@@ -102,13 +105,11 @@ app.delete('/api/persons/:id', (request, response)=> {
         return response.status(404).end('This contact doesnt exist')
     }
 
-
     persons = persons.filter(note => note.id !== id)
 
-
-
     return response.status(202).json({
-        message: `Contact '${contact.name}' deleted correctly`
+        message: `Contact '${contact.name}' deleted correctly`,
+        name: contact.name
         })
 })
 
