@@ -7,6 +7,7 @@ const app = express()
 app.use(express.json())
 //app.use(morgan('tiny'))
 app.use(cors());
+app.use(express.static('dist'))
 
 morgan.token('body', (req) => {
   if (req.method === 'POST') {
@@ -47,9 +48,12 @@ let persons = [
 ]
 
 
+/*
 app.get('/', (request, response) => {
     return response.send('<h1>Hello World</h1>')
 })
+*/
+
 
 app.get('/api/persons', (request, response) => {
     return response.json(persons)
@@ -97,20 +101,20 @@ app.post('/api/persons', (request, response) => {
 
 
 app.delete('/api/persons/:id', (request, response)=> {
-    console.log('Contact to DELETE:', request)
-    const id = Number(request.params.id)
-    const contact = persons.find(value => value.id === id)
+  console.log('Contact to DELETE:', request)
+  const id = Number(request.params.id)
+  const contact = persons.find(value => value.id === id)
 
-    if (!contact){
-        return response.status(404).end('This contact doesnt exist')
-    }
+  if (!contact){
+    return response.status(404).end('This contact doesnt exist')
+  }
 
-    persons = persons.filter(note => note.id !== id)
+  persons = persons.filter(note => note.id !== id)
 
-    return response.status(202).json({
-        message: `Contact '${contact.name}' deleted correctly`,
-        name: contact.name
-        })
+  return response.status(202).json({
+    message: `Contact '${contact.name}' deleted correctly`,
+    name: contact.name
+    })
 })
 
 
@@ -125,12 +129,35 @@ app.get('/info', (request, response)=>{
     `)
 })
 
+app.put('/api/persons/:id', (request, response) => {
+  console.log('Contact to EDIT:', request)
+  const id = Number(request.params.id)
+  const contact = persons.find(value => value.id === id)
+
+  if (!contact){
+      return response.status(404).end('This contact doesnt exist')
+  }
+
+
+  console.log('Params:',request.params)
+  console.log('Body:',request.body)
+  contact.number = request.body.number
+  
+
+  return response.status(202).json({
+    message: `Contact '${contact.name}' edited correctly`,
+    id: contact.id,
+    name: contact.name,
+    number: contact.number
+    })
+})
 
 const unknownEndpoint = (request, response) => {
   return response.status(404).send({ error: 'unknown endpoint' })
 }
 app.use(unknownEndpoint)
 
+//const PORT = 3001
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
